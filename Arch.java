@@ -5,14 +5,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
+import java.io.PrintWriter;
+import java.io.FileWriter;
+
 class Arch{
   //Leer el archivo, guardarlo como un arrayist de string (filas), se usa para ambos archivos
   static ArrayList<String> leer_archivo(String nombre) throws FileNotFoundException , IOException{
 
     String linea;
-    String archivo = nombre;
 
-    File h = new File(archivo);
+    File h = new File(nombre);
     FileReader f = new FileReader(h);
     BufferedReader b = new BufferedReader(f);
     ArrayList<String> filas = new ArrayList<String>();
@@ -36,4 +38,28 @@ class Arch{
     }
     return filas;
   }
+
+      //Crear archivo de salida
+      static File escribirArchivo(ArrayList<Estado> estadosValidos, ArrayList<String> palabras, String ruta) throws IOException{
+      File archivo = new File(ruta + "Solucion.out");
+      FileWriter fw = new FileWriter(archivo);
+      PrintWriter pw = new PrintWriter(fw);
+
+      String palabrasEncontradas = "Palabras encontradas: \n";
+      String palabrasNoEncontradas = "Palabras no encontradas: \n";
+      String sfinal = palabrasEncontradas + palabrasNoEncontradas;
+      for(int i = 0; i< palabras.size(); i++){
+          if (estadosValidos.get(i).generacion == 0){
+              palabrasNoEncontradas = palabrasNoEncontradas + palabras.get(i) + "\n";
+          }
+            else{
+              palabrasEncontradas = palabrasEncontradas + palabras.get(i) + "\n";
+          }
+      }
+      pw.println(palabrasEncontradas);
+      pw.println(palabrasNoEncontradas);
+      pw.close();
+      fw.close();
+      return archivo;
+      }
 }
