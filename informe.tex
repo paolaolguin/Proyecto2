@@ -1,0 +1,182 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+
+\title{Proyecto Sopa}
+\author{Paola Olguín Muñoz}
+
+\begin{document}
+  \begin{titlepage}
+    \maketitle
+  \end{titlepage}
+  \newpage
+  \tableofcontents
+  \listoffigures
+  \newpage
+  \section{Introducción}
+
+
+
+    El proyecto nos pide el desarrollo de la  solución en Java, por lo que, de
+    igual forma, se comentará un poco sobre el lenguaje antes de hablar sobre el
+    algoritmos de solución como tal.
+
+    \subsection{Programación Orientada a Objetos}
+      Un paradigma se define como una forma de ver el mundo. En el ámbito
+      informático tiene una relación directa con la clasificación de lenguajes según
+      las características que tengan y el objetivo para el cual supuestamente debe
+      usarse.
+
+      Para este proyecto se usa el lenguaje Java, que está orientado a objetos.
+      Para comprender mejor como funciona, nos basaremos en el uso de clases y objetos.
+      Una clase es el concepto de una cosa, mientras que un objeto corresponde a la
+      cosa como tal. Para llevarlo a una forma más cotidiana, una clase sería el
+      equivalente a la palabra que se refiere a algo, mientras que el objeto sería
+      la cosa tangible.
+
+    \subsection{Java}
+      El lenguaje de programación a utilizar es Java, que, como dicho antes, es
+      orientado a objetos, por lo que funciona con clases y objetos. Además, es un
+      lenguaje de propósito general que se hizo con la idea de que fuera transportable.
+      Por lo anterior, un programa en Java se compila, pues una vez compilado puede
+      ejecutarse en cualquier máquina, gracias a que no se traspasa el código
+      directamente a código máquina (que sería específico al hardware), sino que,
+      al compilar, Java pasa el código a una máquina virtual, la cual ahorra problemas
+      con respecto a los sistemas operativos y hardware de cada computador.
+
+    \subsection{Diagramas}
+    Para mostrar el comportamiento y la lógica detrás del programa se incluirán
+    diagramas de clase, flujo y secuencia.
+
+
+
+  \section{Descripción del problema}
+
+    Se nos pide resolver una sopa de letras, dada una y una lista de palabras que
+    buscar en ella. Sin embargo, no es una sopa común, sino que tiene particularidades
+    para formar las palabras dentro de ella.
+
+    En resumen, se nos pide buscar unas ciertas palabras, y luego especificar si
+    se encontraron o no en un archivo que creamos.
+
+    \subsection{Consideraciones}
+      A continuación se menciona las cosas a tener en cuenta para la programación
+      de la solución
+    \begin{enumerate}
+      \item Una palabra puede formarse sólo por casillas adyacentes.
+      \item Diagonales no cuentan como palabras.
+      \item Las palabras pueden doblarse.
+      \item Sólo se pregunta si la palabra está, no cuántas veces.
+    \end{enumerate}
+
+
+
+  \section{Descripción de la solución}
+    \textit{¿Qué hacemos al buscar soluciones en un espacio definido?}
+
+    Para responder la pregunta, nos ponemos, metafóricamente, en la situación.
+    Imaginemos que estamos dentro de un laberinto, ¿cómo logramos salir? Como
+    personas tenemos la desventaja que sólo podemos recorrer un camino, pero,
+    ¿qué ocurriría si podemos recorrer todos a la vez?
+
+    Lograríamos encontrar la solución mucho antes. Si a eso le agregamos que
+    eliminamos de nuestras posibles soluciones cualquiera que tenga una pared inmediata,
+    nos evitamos una gran cantidad de caminos que no nos llevan a la salida.
+
+    Una idea parecida fue lo que guió la solución del problema que se nos planteó,
+    la búsqueda de distintas palabras en una sopa de letras. Al igual que en el caso
+    del laboratorio, tenemos un espacio reducido donde buscar, además con la ventaja
+    que sabemos qué palabra estamos buscando.
+
+    \subsection{Algoritmo de Resolución}
+
+    Primero, por como se ingresa la sopa de letras y las palabras que buscamos,
+    hay que leer dos archivos, uno de la sopa y otro de las palabras a buscar en
+    ella. Para esto se tuvo en consideración dos formas; leer cada fila de los
+    archivos a un arreglo (Array) o a un ArrayList.
+    Se optó por la segunda, pues sus objetos tienen un tamaño variable, por lo que
+    no es necesario leer los archivos dos veces o ir aumentando un array para guardar
+    todos las lineas del archivo.
+
+
+    Guardados ambos archivos, separamos la sopa en una matriz, tal que nos queda
+    un ArrayList de arrays de Strings. De esta forma, para obetener una posición en
+    y, recorremos el ArrayList, y para obtener la posición en x recorremos el array
+    interior.
+    Obtenemos entonces una forma de reconocer una posición (y,x).
+
+
+    Antes de comenzar nos preguntamos qué buscamos. Si buscamos la palabra como tal,
+    estaríamos buscando un string. Sin embargo, a un String no se le puede ver la
+    posición de arriba. Por lo tanto, nos definimos un Estado, que contiene posiciones,
+    pues con estas y la sopa ya podemos acceder al elemento en cada una. Agregamos
+    además un atributo generación, que luego nos ayudará a ver si hemos encontrado
+    la palabra o no. Para mayor comprensión, revisar \ref{fig: 1}
+
+    \begin{figure}
+      \centering
+      \includegraphics{}
+      \caption{}
+      \label{fig: 1}
+
+    \end{figure}
+
+    Comenzamos a recorrer la sopa, buscando la primera letra de cada palabra. Al
+    hallarla, agregamos su Estado a una lista de primeros Estados. Estos primeros
+    Estados tienen un ArrayList con un solo elemento; que corresponde a la posición
+    donde se halló la primera letra, y una generación igual a uno.
+    En el caso que no se encuentre la primera letra se retorna un Estado inválido
+    que contiene una generacion cero y una ArrayList vacío donde deberíamos tener
+    posiciones.
+
+    Encontrado el primer Estado, hay que revisar las casillas adyacentes, verificando
+    que no nos salgamos de la matriz. En esta verificación se ve también si la siguiente
+    letra coincide con la siguiente letra buscada en la palabra, pues si no lo hace,
+    el Estado queda como estaba, sin agregar la siguiente posición. En cambio, si
+    encontramos la letra que sigue, se guarda su nueva posición junto con la posición
+    de todas las letras anteriores a ella, además de su generación. Esto continúa
+    hasta recorrer todas las letras de todas las palabras y recorrer todas las
+    posiciones adyacentes de la primera letra de cada una.
+
+    Así, volviendo al punto anterior, tendríamos ArrayList con los Estados de las
+    primeras posiciones, y a partir de cada uno de ellos, formaríamos los Estados
+    siguientes, agregandolos a un ArrayList de Estados Abiertos. Estos Estados se
+    recorren, verificando su generacion; si esta es igual al largo de la palabra,
+    significa que hemos encontrado la palabra. Sin embargo, aún no sabemos si es
+    válida esa respuesta, pues una de las condiciones de la solución es que la palabra
+    no se puede doblar sobre si misma. Es decir, no puede repetir posiciones. Por
+    lo mismo, si se encuentra un Estado con generacion igual al largo de la palabra,
+    se revisan sus posiciones, tal que no repita ninguna.
+
+    En el caso contrario, de que no se encuentre ningún Estado con generación del
+    largo, y ya se recorrieron todas las palabras, sabemos que ningún estado cumplió,
+    por lo cual, si bien se encontró la primera letra, en algún lado la palabra dejó
+    de ser similar. Con a este tipo de Estado lo trabajamos como si no hubiera
+    encontrado la primera letra, pues así separamos los casos en dos solamente;
+    si la palabra se encontró o no.
+    Finalmente, si la generacion es cero ya sabemos que la palabra definitivamente
+    no se encontró, pues ni siquiera estaba la primera letra.
+
+    De esa manera ya tenemos algo para entregar al usuario. Con el último análisis
+    formamos un ArrayList de Estados Validos, el cual contiene Estados con generación
+    cero o del largo de la palabra, sin casos intermedios. Luego se escribe en un
+    archivo qué palabra se halló y cual no, a partir de la generación.
+
+    \subsubsection{Consideraciones de la entrada}
+    \begin{enumerate}
+      \item Se debe tener cuidado con ambos archivos, que no tengan ningún salto de
+      línea al final o al inicio.
+      \item Las palabras se deben escibir de la misma forma que se buscarán en
+      la sopa.
+      \item No se deben poner tildes.
+      \item La sopa se separa con espacios.
+    \end{enumerate}
+
+
+  \section{Conclusión}
+
+
+
+
+\end{document}
